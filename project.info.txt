@@ -1,0 +1,60 @@
+This file contains information that is required for setup this project. These files are ignored 
+from version control System (Git). Each developer is responsible for creating and setting up these files
+according to their setup.
+
+============ appsettings.Development.json ==========
+// Stocky.Web/appsettings.Development.json
+
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "User ID=postgres;Password=yourPassword;Server=localhost;Database=Stocky;"
+  },
+  "Jwt": {
+    "Key": "veryVerySecretKeyForDev",
+    "Issuer": "StockApp-Server",
+    "Audience": "StockApp-Client"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
+  },
+  "Serilog": {
+    "MinimumLevel": {
+      "Default": "Debug",
+      "Override": {
+        "Microsoft": "Information",
+        "System": "Warning"
+      }
+    }
+  }
+} 
+============ end of appsettings.Development.json ==========
+
+============ DbFactory.cs ==========
+// Stocky.Web/DbFactory.cs
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+
+namespace Stocky.Web
+{
+    public class DbFactory : IDesignTimeDbContextFactory<AppDbContext>
+    {
+        public AppDbContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            optionsBuilder.UseNpgsql("Host=localhost;Database=Stocky;Username=postgres;Password=asif123", b => b.MigrationsAssembly("Stocky.Web"));
+
+            return new AppDbContext(optionsBuilder.Options);
+        }
+
+    }
+}
+============ end of DbFactory.cs ==========
+
+
+
+
